@@ -33,10 +33,11 @@ class PomodoroTimer: ObservableObject {
     
     func startTimer(){
         self.active = true
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
-            [weak self] _ in guard let self = self else{ return }
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else{ return }
             if(self.timeRemaining > 0){
                 self.timeRemaining -= 1
+                print("Time Remaining: \(self.timeRemaining)")
             } else {
                 self.pauseTimer()
                 self.startNextMode()
