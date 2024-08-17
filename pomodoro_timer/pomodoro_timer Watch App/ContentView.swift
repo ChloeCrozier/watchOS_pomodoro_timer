@@ -9,14 +9,20 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        HStack {
+            Text("Pomodoro Timer")
+            Image("timer_logo")
+                .resizable()
+                .frame(width: 50, height: 50)
+                .aspectRatio(contentMode: .fit)
         }
         .padding()
+//        .background(Color(.systemGray6))
     }
+    .background(
+        Color.gray
+            .opacity(0.4)
+    )
 }
 
 #Preview {
