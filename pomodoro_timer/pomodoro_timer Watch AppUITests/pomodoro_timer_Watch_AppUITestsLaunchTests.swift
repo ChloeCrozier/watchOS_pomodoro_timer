@@ -1,4 +1,4 @@
-// More testing template
+// More testing templates
 import XCTest
 
 final class pomodoro_timer_Watch_AppUITestsLaunchTests: XCTestCase {
