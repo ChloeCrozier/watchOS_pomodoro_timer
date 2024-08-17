@@ -1,5 +1,4 @@
 // Viewer made to display the time calcualted by the timer controller
-
 import SwiftUI
 
 struct ContentView: View {

@@ -1,5 +1,4 @@
 // The timing logic behind the pomodoro timer modes
-
 import Foundation
 
 enum TimerMode {

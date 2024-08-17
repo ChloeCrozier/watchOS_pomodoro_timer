@@ -1,10 +1,4 @@
-//
-//  pomodoro_timerApp.swift
-//  pomodoro_timer Watch App
-//
-//  Created by Chloe Crozier on 8/16/24.
-//
-
+//  Pomodoro Timer App
 import SwiftUI
 
 @main
