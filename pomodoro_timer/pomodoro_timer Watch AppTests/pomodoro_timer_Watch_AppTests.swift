@@ -10,27 +10,54 @@ import XCTest
 
 final class pomodoro_timer_Watch_AppTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+//    override func setUpWithError() throws {
+//    }
+
+//    override func tearDownWithError() throws {
+//    }
+
+    func testInitialization() throws {
+        let timer = PomodoroTimer()
+        XCTAssertEqual(timer.timeRemaining, 25*60)
+        XCTAssertEqual(timer.mode, .work)
+        XCTAssertFalse(timer.active)
+        XCTAssertEqual(timer.workCycles, 0)
+    }
+    
+    func testStartStop() throws {
+        let timer = PomodoroTimer()
+        timer.startStop()
+        XCTAssertTrue(timer.active)
+        timer.startStop()
+        XCTAssertFalse(timer.active)
+    }
+    
+    func testModeTransitions() throws {
+        let timer = PomodoroTimer()
+        
+        // Test transition from work to short break
+        timer.mode = .work
+        timer.workCycles = 3
+        timer.startNextMode()
+        XCTAssertEqual(timer.mode, .shortBreak)
+        XCTAssertEqual(timer.timeRemaining, 5*PomodoroTimer.minutes)
+        
+        // Test transition from short break to long break
+        timer.mode = .work
+        timer.workCycles = 4
+        timer.startNextMode()
+        XCTAssertEqual(timer.mode, .longBreak)
+        XCTAssertEqual(timer.timeRemaining, 15*PomodoroTimer.minutes)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testGetTimeRemaining() throws {
+        let timer = PomodoroTimer()
+        timer.timeRemaining = 75
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Tests marked async will run the test method on an arbitrary thread managed by the Swift runtime.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+//    func testPerformanceExample() throws {
+//        self.measure {
+//        }
+//    }
 }

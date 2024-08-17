@@ -9,7 +9,7 @@ enum TimerMode {
 }
 
 class PomodoroTimer: ObservableObject {
-    private static let minutes = 60
+    static let minutes = 60
     @Published var active: Bool
     @Published var mode: TimerMode
     @Published var timeRemaining: Int
@@ -31,7 +31,7 @@ class PomodoroTimer: ObservableObject {
         }
     }
     
-    private func startTimer(){
+    func startTimer(){
         self.active = true
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
             [weak self] _ in guard let self = self else{ return }
@@ -44,13 +44,13 @@ class PomodoroTimer: ObservableObject {
         }
     }
     
-    private func pauseTimer(){
+    func pauseTimer(){
         self.active = false
         self.timer?.invalidate()
         self.timer = nil
     }
     
-    private func resetTimer(){
+    func resetTimer(){
         if(self.mode == .work){
             self.timeRemaining = 25 * PomodoroTimer.minutes
         } else if(self.mode == .shortBreak){
@@ -58,9 +58,10 @@ class PomodoroTimer: ObservableObject {
         } else{
             self.timeRemaining = 15 * PomodoroTimer.minutes
         }
+        self.active = false
     }
     
-    private func startNextMode(){
+    func startNextMode(){
         if(self.mode == .longBreak || self.mode == .shortBreak){
             self.mode = .work
             self.timeRemaining = 25 * PomodoroTimer.minutes
