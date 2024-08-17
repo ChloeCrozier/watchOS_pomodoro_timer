@@ -1,27 +1,33 @@
-//
-//  ContentView.swift
-//  pomodoro_timer Watch App
-//
-//  Created by Chloe Crozier on 8/16/24.
-//
+// Viewer made to display the time calcualted by the timer controller
 
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var timer = PomodoroTimer()
+//    @ObservedObject var viewModel = TimerViewModel()
+    
+    
     var body: some View {
-        HStack {
-            Text("Pomodoro Timer")
-            Image("timer_logo")
-                .resizable()
-                .frame(width: 50, height: 50)
-                .aspectRatio(contentMode: .fit)
-        }
-        .padding()
-//        .background(Color(.systemGray6))
+           VStack {
+               Text(timer.getTimeRemaining())
+                   .font(.largeTitle)
+               HStack {
+                   Button(action: {
+                       timer.startStop()
+                   }) {
+                       Text(timer.active == true ? "Pause" : "Start")
+                           .font(.title2)
+                           .padding()
+                           .background(Color.white)
+                           .foregroundColor(.black)
+                           .cornerRadius(10)
+                   }
+               }
+           }
+           .padding()
+       }
     }
 
-}
-
 #Preview {
-    ContentView()
+   ContentView()
 }

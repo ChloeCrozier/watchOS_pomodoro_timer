@@ -4,6 +4,15 @@ import SwiftUI
 
 class TimerViewModel: ObservableObject {
     @Published var timer = PomodoroTimer()
+//    @Published var active: Bool
+//    @Published var mode: TimerMode
+//    @Published var timeRemaining: Int
+//    
+//    init(){
+//        active = timer.active
+//        mode = timer.mode
+//        timeRemaining = timer.timeRemaining
+//    }
     
     var backgroundColor: Color {
         switch timer.mode {

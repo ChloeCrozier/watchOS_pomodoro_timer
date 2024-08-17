@@ -10,6 +10,10 @@ enum TimerMode {
 
 class PomodoroTimer: ObservableObject {
     static let minutes = 60
+    static let workTime = 1
+    static let shortTime = 1
+    static let longTime = 1
+    static let maxCycles = 4
     @Published var active: Bool
     @Published var mode: TimerMode
     @Published var timeRemaining: Int
@@ -17,7 +21,7 @@ class PomodoroTimer: ObservableObject {
     var timer : Timer?
     
     init(){
-        self.timeRemaining = 25 * PomodoroTimer.minutes
+        self.timeRemaining = PomodoroTimer.workTime * PomodoroTimer.minutes
         self.mode = .work
         self.active = false
         self.workCycles = 0
@@ -53,11 +57,11 @@ class PomodoroTimer: ObservableObject {
     
     func resetTimer(){
         if(self.mode == .work){
-            self.timeRemaining = 25 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.workTime * PomodoroTimer.minutes
         } else if(self.mode == .shortBreak){
-            self.timeRemaining = 5 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.shortTime * PomodoroTimer.minutes
         } else{
-            self.timeRemaining = 15 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.longTime * PomodoroTimer.minutes
         }
         self.active = false
     }
@@ -65,14 +69,14 @@ class PomodoroTimer: ObservableObject {
     func startNextMode(){
         if(self.mode == .longBreak || self.mode == .shortBreak){
             self.mode = .work
-            self.timeRemaining = 25 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.workTime * PomodoroTimer.minutes
             self.workCycles += 1
-        } else if(self.mode == .work && self.workCycles < 4){
+        } else if(self.mode == .work && self.workCycles < PomodoroTimer.maxCycles){
             self.mode = .shortBreak
-            self.timeRemaining = 5 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.shortTime * PomodoroTimer.minutes
         } else{
             self.mode = .longBreak
-            self.timeRemaining = 15 * PomodoroTimer.minutes
+            self.timeRemaining = PomodoroTimer.longTime * PomodoroTimer.minutes
         }
     }
     
@@ -81,8 +85,8 @@ class PomodoroTimer: ObservableObject {
     }
     
     func getTimeRemaining() -> String {
-        let mins = self.timeRemaining / 60
-        let secs = self.timeRemaining % 60
+        let mins = self.timeRemaining / PomodoroTimer.minutes
+        let secs = self.timeRemaining % PomodoroTimer.minutes
         return String(format: "%02d:%02d", mins, secs)
     }
 }
