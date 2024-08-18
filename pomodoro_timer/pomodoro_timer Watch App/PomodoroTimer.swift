@@ -52,7 +52,7 @@ class PomodoroTimerController: ObservableObject {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else{ return }
             if(self.timeRemaining > 0){
-                self.timeRemaining -= 10
+                self.timeRemaining -= 1
             } else {
                 self.startNextMode()
             }
