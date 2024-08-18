@@ -41,7 +41,6 @@ class TimerViewModel: ObservableObject {
     }
     
     func startStop() {
-        print("starting or stopping")
         timer.startStop()
     }
     
@@ -71,6 +70,7 @@ class TimerViewModel: ObservableObject {
     
     func setLongBreak(input: Int){
         timer.updateLongTime(newTime: input)
+        timer.setTime()
     }
     
     func getTimeRemaining() -> String {

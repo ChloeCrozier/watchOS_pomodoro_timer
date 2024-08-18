@@ -65,26 +65,51 @@ struct ModeSelectionView: View {
     
     var body: some View {
         VStack {
-            Button(action: {
-                model.startWork(method: "select")
-            }) {
-                Text("Pomodoro")
+            HStack{
+                Text("\(model.getLongTime())")
                     .font(.body)
                     .padding()
-                    .background(model.getWorkColor())
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                VStack {
+                    Button(action: {
+                        model.setLongBreak(input: model.getLongTime() + 1)
+                    }) {
+                        Image(systemName: "arrowshape.up.circle.fill")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .foregroundColor(.white)
+                    }
+                    Button(action: {
+                        model.setLongBreak(input: model.getLongTime() - 1)
+                    }) {
+                        Image(systemName: "arrowshape.down.circle.fill")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .foregroundColor(.white)
+                    }
+                }
             }
-            Button(action: {
-                model.startShortBreak(method: "select")
-            }) {
-                Text("Short Break")
-                    .font(.body)
-                    .padding()
-                    .background(model.getShortBreakColor())
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
+            //            Button(action: {
+            //                model.startWork(method: "select")
+            //            }) {
+            //                Text("Pomodoro")
+            //                    .font(.body)
+            //                    .padding()
+            //                    .background(model.getWorkColor())
+            //                    .foregroundColor(.white)
+            //                    .cornerRadius(10)
+            //            }
+            //            Button(action: {
+            //                model.startShortBreak(method: "select")
+            //            }) {
+            //                Text("Short Break")
+            //                    .font(.body)
+            //                    .padding()
+            //                    .background(model.getShortBreakColor())
+            //                    .foregroundColor(.white)
+            //                    .cornerRadius(10)
+            //            }
             Button(action: {
                 model.startLongBreak(method: "select")
             }) {
@@ -94,19 +119,7 @@ struct ModeSelectionView: View {
                     .background(model.getLongBreakColor().opacity(6))
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                Text("\(model.getLongTime())")
-                    .font(.body)
-                    .padding()
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                Button(action: {
-                    model.startStop()
-                }) {
-                    Image(systemName: "arrowshape.up.circle.fill")
-                        .resizable()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.white)
-                }
+
             }
         }
     }
