@@ -8,13 +8,14 @@ enum TimerMode {
 }
 
 class PomodoroTimer: ObservableObject {
-    static let minutes = 60
-    static let maxCycles = 4
-    var startOnNext: Bool
-    var workCycles: Int
-    var workTime: Int
-    var shortTime: Int
-    var longTime: Int
+    private static let minutes = 60
+    private static let maxCycles = 4
+    private var startOnNext: Bool
+    private var maxNum: Int
+    private var workCycles: Int
+    private var workTime: Int
+    private var shortTime: Int
+    private var longTime: Int
     @Published var active: Bool
     @Published var mode: TimerMode
     @Published var timeRemaining: Int
@@ -29,6 +30,7 @@ class PomodoroTimer: ObservableObject {
         self.active = false
         self.workCycles = 1
         self.startOnNext = false
+        self.maxNum = 50
     }
     
     func startStop(){
@@ -133,16 +135,16 @@ class PomodoroTimer: ObservableObject {
         case .work:
             self.timeRemaining = self.workTime * PomodoroTimer.minutes
         case .shortBreak:
-            self.timeRemaining = self.workTime * PomodoroTimer.minutes
+            self.timeRemaining = self.shortTime * PomodoroTimer.minutes
         case .longBreak:
-            self.timeRemaining = self.workTime * PomodoroTimer.minutes
+            self.timeRemaining = self.longTime * PomodoroTimer.minutes
         }
     }
     
     func updateWorkTime(newTime: Int){
         if(newTime < 0){
-            self.workTime = 99
-        } else if(newTime > 99){
+            self.workTime = self.maxNum
+        } else if(newTime > self.maxNum){
             self.workTime = 0
         } else{
             self.workTime = newTime
@@ -151,8 +153,8 @@ class PomodoroTimer: ObservableObject {
     
     func updateShortTime(newTime: Int){
         if(newTime < 0){
-            self.shortTime = 99
-        } else if(newTime > 99){
+            self.shortTime = self.maxNum
+        } else if(newTime > self.maxNum){
             self.shortTime = 0
         } else{
             self.shortTime = newTime
@@ -161,12 +163,59 @@ class PomodoroTimer: ObservableObject {
     
     func updateLongTime(newTime: Int){
         if(newTime < 0){
-            self.longTime = 99
-        } else if(newTime > 99){
+            self.longTime = self.maxNum
+        } else if(newTime > self.maxNum){
             self.longTime = 0
         } else{
             self.longTime = newTime
         }
+    }
+    
+    func getMode(timerType: String) -> String {
+        if(timerType == "work"){
+            return "Pomodoro"
+        } else if(timerType == "shortBreak"){
+            return "Short Break"
+        } else if(timerType == "longBreak"){
+            return "Long Break"
+        } else{
+            if(self.mode == .work){
+                return "Pomodoro"
+            } else if(self.mode == .shortBreak){
+                return "Short Break"
+            } else{
+                return "Long Break"
+            }
+        }
+    }
+    
+    func getTimerIcon(modeType: String) -> String {
+        switch modeType {
+        case "work":
+            if self.workTime < 10 {
+                return "0\(self.workTime).circle.fill"
+            } else {
+                return "\(self.workTime).circle.fill"
+            }
+        case "shortBreak":
+            if self.shortTime < 10 {
+                return "0\(self.shortTime).circle.fill"
+            } else {
+                return "\(self.shortTime).circle.fill"
+            }
+        case "longBreak":
+            if self.longTime < 10 {
+                return "0\(self.longTime).circle.fill"
+            } else {
+                return "\(self.longTime).circle.fill"
+            }
+        default:
+            return ""
+        }
+    }
+    
+    func getWorkCycles() -> Int {
+        return self.workCycles
     }
     
     func getWorkTime() -> Int {

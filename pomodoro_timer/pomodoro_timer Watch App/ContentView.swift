@@ -8,11 +8,17 @@ struct ContentView: View {
         TabView {
             TimerView(model: model)
                 .tabItem {
-                    Image(systemName: "circle.fill")
+                    Image(systemName: model.getTimerIcon(modeType: "work"))
                 }
                 .padding()
             
             ModeSelectionView(model: model)
+                .tabItem {
+                    Image(systemName: "circle.fill")
+                    Text("Modes")
+                }
+                .padding()
+            TimeAdjustmentView(model: model)
                 .tabItem {
                     Image(systemName: "circle.fill")
                     Text("Modes")
@@ -33,7 +39,7 @@ struct TimerView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("\(model.getMode()) #\(model.getWorkCycles())")
+                Text("\(model.getMode(timerType: "active")) #\(model.getWorkCycles())")
                     .font(.title3)
             }
             Text(model.getTimeRemaining())
@@ -65,15 +71,90 @@ struct ModeSelectionView: View {
     
     var body: some View {
         VStack {
-            HStack{
-                Text("\(model.getLongTime())")
+            Button(action: {
+                model.startWork(method: "select")
+            }) {
+                Image(systemName: model.getTimerIcon(modeType: "work"))
+                Text(model.getMode(timerType: "work"))
                     .font(.body)
+                    .padding()
+                    .background(model.getWorkColor())
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            Button(action: {
+                model.startShortBreak(method: "select")
+            }) {
+                Image(systemName: model.getTimerIcon(modeType: "shortBreak"))
+                Text(model.getMode(timerType: "shortBreak"))
+                    .font(.body)
+                    .padding()
+                    .background(model.getShortBreakColor())
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            Button(action: {
+                model.startLongBreak(method: "select")
+            }) {
+                Image(systemName: model.getTimerIcon(modeType: "longBreak"))
+                Text(model.getMode(timerType: "longBreak"))
+                    .font(.body)
+                    .padding()
+                    .background(model.getLongBreakColor().opacity(6))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+
+            }
+        }
+    }
+}
+
+struct TimeAdjustmentView: View {
+    @ObservedObject var model: TimerViewModel
+    
+    var body: some View {
+        VStack {
+            HStack{
+                Button(action: {
+                    model.adjustTimeAmount(method: "work")
+                }) {
+                    Image(systemName: model.getTimerIcon(modeType: "work"))
+                        .padding()
+                        .background(model.getWorkColor())
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .border(model.selectedMode == "work" ? Color.white : Color.clear, width: 1)
+                }
+                Button(action: {
+                    model.adjustTimeAmount(method: "shortBreak")
+                }) {
+                    Image(systemName: model.getTimerIcon(modeType: "shortBreak"))
+                        .padding()
+                        .background(model.getShortBreakColor())
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .border(model.selectedMode == "shortBreak" ? Color.white : Color.clear, width: 1)
+                }
+                Button(action: {
+                    model.adjustTimeAmount(method: "longBreak")
+                }) {
+                    Image(systemName: model.getTimerIcon(modeType: "longBreak"))
+                        .padding()
+                        .background(model.getLongBreakColor())
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .border(model.selectedMode == "longBreak" ? Color.white : Color.clear, width: 1)
+                }
+            }
+            HStack{
+                Text("\(model.getSelectedTime())")
+                    .font(.title)
                     .padding()
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 VStack {
                     Button(action: {
-                        model.setLongBreak(input: model.getLongTime() + 1)
+                        model.incrementTime()
                     }) {
                         Image(systemName: "arrowshape.up.circle.fill")
                             .resizable()
@@ -81,7 +162,7 @@ struct ModeSelectionView: View {
                             .foregroundColor(.white)
                     }
                     Button(action: {
-                        model.setLongBreak(input: model.getLongTime() - 1)
+                        model.decrementTime()
                     }) {
                         Image(systemName: "arrowshape.down.circle.fill")
                             .resizable()
@@ -89,37 +170,6 @@ struct ModeSelectionView: View {
                             .foregroundColor(.white)
                     }
                 }
-            }
-            //            Button(action: {
-            //                model.startWork(method: "select")
-            //            }) {
-            //                Text("Pomodoro")
-            //                    .font(.body)
-            //                    .padding()
-            //                    .background(model.getWorkColor())
-            //                    .foregroundColor(.white)
-            //                    .cornerRadius(10)
-            //            }
-            //            Button(action: {
-            //                model.startShortBreak(method: "select")
-            //            }) {
-            //                Text("Short Break")
-            //                    .font(.body)
-            //                    .padding()
-            //                    .background(model.getShortBreakColor())
-            //                    .foregroundColor(.white)
-            //                    .cornerRadius(10)
-            //            }
-            Button(action: {
-                model.startLongBreak(method: "select")
-            }) {
-                Text("Long Break")
-                    .font(.body)
-                    .padding()
-                    .background(model.getLongBreakColor().opacity(6))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-
             }
         }
     }

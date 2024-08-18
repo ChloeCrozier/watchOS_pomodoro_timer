@@ -3,7 +3,7 @@ import SwiftUI
 
 class TimerViewModel: ObservableObject {
     @Published var timer = PomodoroTimer()
-    
+    @Published var selectedMode: String? = "work"
     
     var backgroundColor: Color {
         switch timer.mode {
@@ -40,6 +40,48 @@ class TimerViewModel: ObservableObject {
         }
     }
     
+    func getSelectedTime() -> Int {
+        if(selectedMode == "work"){
+            return timer.getWorkTime()
+        } else if(selectedMode == "shortBreak"){
+            return timer.getShortTime()
+        } else{
+            return timer.getLongTime()
+        }
+    }
+    
+    func incrementTime(){
+        if(selectedMode == "work"){
+            return self.setWorkTime(input: timer.getWorkTime() + 1)
+        } else if(selectedMode == "shortBreak"){
+            return self.setShortBreak(input: timer.getShortTime() + 1)
+        } else{
+            return self.setLongBreak(input: timer.getLongTime() + 1)
+        }
+    }
+    
+    func decrementTime(){
+        if(selectedMode == "work"){
+            return self.setWorkTime(input: timer.getWorkTime() - 1)
+        } else if(selectedMode == "shortBreak"){
+            return self.setShortBreak(input: timer.getShortTime() - 1)
+        } else{
+            return self.setLongBreak(input: timer.getLongTime() - 1)
+        }
+    }
+    
+    func getTimerIcon(modeType: String) -> String {
+        return timer.getTimerIcon(modeType: modeType)
+    }
+    
+    func getMode(timerType: String) -> String {
+        return timer.getMode(timerType: timerType)
+    }
+    
+    func adjustTimeAmount(method: String){
+        self.selectedMode = method
+    }
+    
     func startStop() {
         timer.startStop()
     }
@@ -62,10 +104,12 @@ class TimerViewModel: ObservableObject {
     
     func setWorkTime(input: Int){
         timer.updateWorkTime(newTime: input)
+        timer.setTime()
     }
     
     func setShortBreak(input: Int){
         timer.updateShortTime(newTime: input)
+        timer.setTime()
     }
     
     func setLongBreak(input: Int){
@@ -82,28 +126,18 @@ class TimerViewModel: ObservableObject {
     }
     
     func getWorkCycles() -> Int {
-        return timer.workCycles
-    }
-    
-    func getMode() -> String {
-        if(timer.mode == .work){
-            return "Pomodoro"
-        } else if(timer.mode == .shortBreak){
-            return "Short Break"
-        } else{
-            return "Long Break"
-        }
+        return timer.getWorkCycles()
     }
     
     func getWorkTime() -> Int {
-        return timer.workTime
+        return timer.getWorkTime()
     }
     
     func getShortTime() -> Int {
-        return timer.shortTime
+        return timer.getShortTime()
     }
     
     func getLongTime() -> Int {
-        return timer.longTime
+        return timer.getLongTime()
     }
 }

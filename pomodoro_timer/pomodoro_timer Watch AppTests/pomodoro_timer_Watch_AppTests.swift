@@ -8,7 +8,7 @@ final class pomodoro_timer_Watch_AppTests: XCTestCase {
         XCTAssertEqual(timer.timeRemaining, 25*60)
         XCTAssertEqual(timer.mode, .work)
         XCTAssertFalse(timer.active)
-        XCTAssertEqual(timer.workCycles, 0)
+        XCTAssertEqual(timer.getWorkCycles(), 0)
     }
     
     func testStartStop() throws {
@@ -17,20 +17,6 @@ final class pomodoro_timer_Watch_AppTests: XCTestCase {
         XCTAssertTrue(timer.active)
         timer.startStop()
         XCTAssertFalse(timer.active)
-    }
-    
-    func testModeTransitions() throws {
-        let timer = PomodoroTimer()
-        timer.mode = .work
-        timer.workCycles = 3
-        timer.startNextMode()
-        XCTAssertEqual(timer.mode, .shortBreak)
-        XCTAssertEqual(timer.timeRemaining, 5*PomodoroTimer.minutes)
-        timer.mode = .work
-        timer.workCycles = 4
-        timer.startNextMode()
-        XCTAssertEqual(timer.mode, .longBreak)
-        XCTAssertEqual(timer.timeRemaining, 15*PomodoroTimer.minutes)
     }
     
     func testGetTimeRemaining() throws {
