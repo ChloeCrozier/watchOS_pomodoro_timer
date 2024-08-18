@@ -2,10 +2,10 @@
 import SwiftUI
 
 @main
-struct PomodoroTimeApp: App {
+struct PomodoroTimerApp: App {
     var body: some Scene {
         WindowGroup {
-            PomodoroTimeView()
+            PomodoroTimerView()
         }
     }
 }

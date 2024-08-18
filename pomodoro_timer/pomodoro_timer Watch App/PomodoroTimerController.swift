@@ -1,6 +1,7 @@
 // The timing logic behind the pomodoro timer modes
 import Foundation
 import SwiftUI
+import WatchKit
 
 enum TimerMode {
     case work
@@ -54,6 +55,7 @@ class PomodoroTimerController: ObservableObject {
             if(self.timeRemaining > 0){
                 self.timeRemaining -= 1
             } else {
+                self.triggerHapticFeedback()
                 self.startNextMode()
             }
         }
@@ -233,5 +235,9 @@ class PomodoroTimerController: ObservableObject {
     
     func setSelectedMode(method: String){
         self.selectedMode = method
+    }
+    
+    func triggerHapticFeedback() {
+        WKInterfaceDevice.current().play(.notification)
     }
 }

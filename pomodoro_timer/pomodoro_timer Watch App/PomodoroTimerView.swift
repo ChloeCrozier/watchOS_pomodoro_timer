@@ -1,7 +1,7 @@
 // Viewer made to display the time calcualted by the timer controller
 import SwiftUI
 
-struct PomodoroTimeView: View {
+struct PomodoroTimerView: View {
     @ObservedObject var model = PomodoroTimerModel()
     
     var body: some View {
@@ -238,5 +238,5 @@ struct TimeAdjustmentView: View {
 }
 
 #Preview {
-    PomodoroTimeView()
+    PomodoroTimerView()
 }
