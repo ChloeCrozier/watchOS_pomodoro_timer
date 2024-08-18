@@ -10,6 +10,9 @@ enum TimerMode {
 class PomodoroTimer: ObservableObject {
     private static let minutes = 60
     private static let maxCycles = 4
+    private static let defaultWorkTime = 25
+    private static let defaultShortTime = 5
+    private static let defaultLongTime = 15
     private var startOnNext: Bool
     private var maxNum: Int
     private var workCycles: Int
@@ -60,6 +63,8 @@ class PomodoroTimer: ObservableObject {
     }
     
     func resetTimer(){
+        self.pauseTimer()
+        self.active = false
         if(self.mode == .work){
             self.timeRemaining = self.workTime * PomodoroTimer.minutes
         } else if(self.mode == .shortBreak){
@@ -67,7 +72,9 @@ class PomodoroTimer: ObservableObject {
         } else{
             self.timeRemaining = self.longTime * PomodoroTimer.minutes
         }
-        self.active = false
+        if(self.startOnNext){
+            self.startTimer()
+        }
     }
     
     func startWork(method: String){
@@ -228,5 +235,17 @@ class PomodoroTimer: ObservableObject {
     
     func getLongTime() -> Int {
         return self.longTime
+    }
+    
+    func getDefaultWorkTime() -> Int {
+        return PomodoroTimer.defaultWorkTime
+    }
+    
+    func getDefaultShortTime() -> Int {
+        return PomodoroTimer.defaultShortTime
+    }
+    
+    func getDefaultLongTime() -> Int {
+        return PomodoroTimer.defaultLongTime
     }
 }

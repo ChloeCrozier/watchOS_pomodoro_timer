@@ -70,6 +70,14 @@ class TimerViewModel: ObservableObject {
         }
     }
     
+    func revertSettings(){
+        selectedMode = "work"
+        self.setWorkTime(input: timer.getDefaultWorkTime())
+        self.setShortBreak(input: timer.getDefaultShortTime())
+        self.setLongBreak(input: timer.getDefaultLongTime())
+        timer.resetTimer()
+    }
+    
     func getTimerIcon(modeType: String) -> String {
         return timer.getTimerIcon(modeType: modeType)
     }
@@ -139,5 +147,21 @@ class TimerViewModel: ObservableObject {
     
     func getLongTime() -> Int {
         return timer.getLongTime()
+    }
+    
+    func getDefaultWorkTime() -> Int {
+        return timer.getDefaultWorkTime()
+    }
+    
+    func getDefaultShortTime() -> Int {
+        return timer.getDefaultShortTime()
+    }
+    
+    func getDefaultLongTime() -> Int {
+        return timer.getDefaultLongTime()
+    }
+    
+    func resetTimer(){
+        timer.resetTimer()
     }
 }
