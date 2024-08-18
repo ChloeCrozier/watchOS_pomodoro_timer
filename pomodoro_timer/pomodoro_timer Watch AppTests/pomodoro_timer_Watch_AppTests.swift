@@ -4,7 +4,7 @@ import XCTest
 
 final class pomodoro_timer_Watch_AppTests: XCTestCase {
     func testInitialization() throws {
-        let timer = PomodoroTimer()
+        let timer = PomodoroTimerController()
         XCTAssertEqual(timer.timeRemaining, 25*60)
         XCTAssertEqual(timer.mode, .work)
         XCTAssertFalse(timer.active)
@@ -12,7 +12,7 @@ final class pomodoro_timer_Watch_AppTests: XCTestCase {
     }
     
     func testStartStop() throws {
-        let timer = PomodoroTimer()
+        let timer = PomodoroTimerController()
         timer.startStop()
         XCTAssertTrue(timer.active)
         timer.startStop()
@@ -20,13 +20,13 @@ final class pomodoro_timer_Watch_AppTests: XCTestCase {
     }
     
     func testGetTimeRemaining() throws {
-        let timer = PomodoroTimer()
+        let timer = PomodoroTimerController()
         timer.timeRemaining = 75
         XCTAssertEqual(timer.getTimeRemaining(), "01:15")
     }
     
     func testTimerActiveState() throws {
-        let timer = PomodoroTimer()
+        let timer = PomodoroTimerController()
         timer.startStop()
         XCTAssertTrue(timer.active)
         timer.startStop()

@@ -1,5 +1,6 @@
 // The timing logic behind the pomodoro timer modes
 import Foundation
+import SwiftUI
 
 enum TimerMode {
     case work
@@ -7,7 +8,7 @@ enum TimerMode {
     case longBreak
 }
 
-class PomodoroTimer: ObservableObject {
+class PomodoroTimerController: ObservableObject {
     private static let minutes = 60
     private static let maxCycles = 4
     private static let defaultWorkTime = 25
@@ -23,17 +24,19 @@ class PomodoroTimer: ObservableObject {
     @Published var mode: TimerMode
     @Published var timeRemaining: Int
     @Published var timer : Timer?
+    @Published var selectedMode: String?
     
     init(){
-        self.workTime = 1
-        self.shortTime = 2
-        self.longTime = 3
+        self.workTime = PomodoroTimerController.defaultWorkTime
+        self.shortTime = PomodoroTimerController.defaultShortTime
+        self.longTime = PomodoroTimerController.defaultLongTime
         self.mode = .work
-        self.timeRemaining = self.workTime * PomodoroTimer.minutes
+        self.timeRemaining = self.workTime * PomodoroTimerController.minutes
         self.active = false
         self.workCycles = 1
         self.startOnNext = false
         self.maxNum = 50
+        selectedMode = "work"
     }
     
     func startStop(){
@@ -66,11 +69,11 @@ class PomodoroTimer: ObservableObject {
         self.pauseTimer()
         self.active = false
         if(self.mode == .work){
-            self.timeRemaining = self.workTime * PomodoroTimer.minutes
+            self.timeRemaining = self.workTime * PomodoroTimerController.minutes
         } else if(self.mode == .shortBreak){
-            self.timeRemaining = self.shortTime * PomodoroTimer.minutes
+            self.timeRemaining = self.shortTime * PomodoroTimerController.minutes
         } else{
-            self.timeRemaining = self.longTime * PomodoroTimer.minutes
+            self.timeRemaining = self.longTime * PomodoroTimerController.minutes
         }
         if(self.startOnNext){
             self.startTimer()
@@ -80,7 +83,7 @@ class PomodoroTimer: ObservableObject {
     func startWork(method: String){
         self.pauseTimer()
         self.mode = .work
-        self.timeRemaining = self.workTime * PomodoroTimer.minutes
+        self.timeRemaining = self.workTime * PomodoroTimerController.minutes
         if(method == "next"){
             if(self.workCycles >= 4){
                 self.workCycles = 1;
@@ -98,7 +101,7 @@ class PomodoroTimer: ObservableObject {
     func startShortBreak(method: String){
         self.pauseTimer()
         self.mode = .shortBreak
-        self.timeRemaining = self.shortTime * PomodoroTimer.minutes
+        self.timeRemaining = self.shortTime * PomodoroTimerController.minutes
         if(method != "next"){
             self.workCycles = 1;
         }
@@ -110,7 +113,7 @@ class PomodoroTimer: ObservableObject {
     func startLongBreak(method: String){
         self.pauseTimer()
         self.mode = .longBreak
-        self.timeRemaining = self.longTime * PomodoroTimer.minutes
+        self.timeRemaining = self.longTime * PomodoroTimerController.minutes
         if(method != "next"){
             self.workCycles = 1;
         }
@@ -122,7 +125,7 @@ class PomodoroTimer: ObservableObject {
     func startNextMode(){
         if(self.mode == .longBreak || self.mode == .shortBreak){
             self.startWork(method: "next")
-        } else if((self.mode == .work) && (self.workCycles % PomodoroTimer.maxCycles != 0)){
+        } else if((self.mode == .work) && (self.workCycles % PomodoroTimerController.maxCycles != 0)){
             self.startShortBreak(method: "next")
         } else{
             self.startLongBreak(method: "next")
@@ -130,8 +133,8 @@ class PomodoroTimer: ObservableObject {
     }
     
     func getTimeRemaining() -> String {
-        let mins = self.timeRemaining / PomodoroTimer.minutes
-        let secs = self.timeRemaining % PomodoroTimer.minutes
+        let mins = self.timeRemaining / PomodoroTimerController.minutes
+        let secs = self.timeRemaining % PomodoroTimerController.minutes
         return String(format: "%02d:%02d", mins, secs)
     }
     
@@ -140,11 +143,11 @@ class PomodoroTimer: ObservableObject {
         self.workCycles = 1;
         switch self.mode {
         case .work:
-            self.timeRemaining = self.workTime * PomodoroTimer.minutes
+            self.timeRemaining = self.workTime * PomodoroTimerController.minutes
         case .shortBreak:
-            self.timeRemaining = self.shortTime * PomodoroTimer.minutes
+            self.timeRemaining = self.shortTime * PomodoroTimerController.minutes
         case .longBreak:
-            self.timeRemaining = self.longTime * PomodoroTimer.minutes
+            self.timeRemaining = self.longTime * PomodoroTimerController.minutes
         }
     }
     
@@ -196,31 +199,6 @@ class PomodoroTimer: ObservableObject {
         }
     }
     
-    func getTimerIcon(modeType: String) -> String {
-        switch modeType {
-        case "work":
-            if self.workTime < 10 {
-                return "0\(self.workTime).circle.fill"
-            } else {
-                return "\(self.workTime).circle.fill"
-            }
-        case "shortBreak":
-            if self.shortTime < 10 {
-                return "0\(self.shortTime).circle.fill"
-            } else {
-                return "\(self.shortTime).circle.fill"
-            }
-        case "longBreak":
-            if self.longTime < 10 {
-                return "0\(self.longTime).circle.fill"
-            } else {
-                return "\(self.longTime).circle.fill"
-            }
-        default:
-            return ""
-        }
-    }
-    
     func getWorkCycles() -> Int {
         return self.workCycles
     }
@@ -238,14 +216,22 @@ class PomodoroTimer: ObservableObject {
     }
     
     func getDefaultWorkTime() -> Int {
-        return PomodoroTimer.defaultWorkTime
+        return PomodoroTimerController.defaultWorkTime
     }
     
     func getDefaultShortTime() -> Int {
-        return PomodoroTimer.defaultShortTime
+        return PomodoroTimerController.defaultShortTime
     }
     
     func getDefaultLongTime() -> Int {
-        return PomodoroTimer.defaultLongTime
+        return PomodoroTimerController.defaultLongTime
+    }
+    
+    func getSelectedMode() -> String? {
+        return self.selectedMode
+    }
+    
+    func setSelectedMode(method: String){
+        self.selectedMode = method
     }
 }

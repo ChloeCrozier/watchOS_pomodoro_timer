@@ -1,8 +1,8 @@
 // Viewer made to display the time calcualted by the timer controller
 import SwiftUI
 
-struct ContentView: View {
-    @ObservedObject var model = TimerViewModel()
+struct PomodoroTimeView: View {
+    @ObservedObject var model = PomodoroTimerModel()
     
     var body: some View {
         TabView {
@@ -34,17 +34,18 @@ struct ContentView: View {
 }
 
 struct TimerView: View {
-    @ObservedObject var model: TimerViewModel
+    @ObservedObject var model: PomodoroTimerModel
     
     var body: some View {
         VStack {
             HStack {
                 Text("\(model.getMode(timerType: "active")) #\(model.getWorkCycles())")
-                    .font(.title3)
+                    .font(.custom(model.getFont(), fixedSize: 18))
             }
             Text(model.getTimeRemaining())
-                .font(.largeTitle)
-                .padding(.top, 1)
+                .font(.custom(model.getFont(), size: 35))
+                .padding(.top, 10)
+                .padding(.bottom,7)
             HStack {
                 Button(action: {
                     model.resetTimer()
@@ -61,7 +62,7 @@ struct TimerView: View {
                 }) {
                     Image(systemName: model.getStatus() ? "pause.circle.fill" : "play.circle.fill")
                         .resizable()
-                        .frame(width: 40, height: 40)
+                        .frame(width: 50, height: 50)
                         .foregroundColor(.white)
                         .padding(.horizontal, 3)
                 }
@@ -82,16 +83,12 @@ struct TimerView: View {
 }
 
 struct ModeSelectionView: View {
-    @ObservedObject var model: TimerViewModel
+    @ObservedObject var model: PomodoroTimerModel
     
     var body: some View {
-        VStack {
-            HStack{
-                Text("Quick Select")
-                    .font(.body)
-                    .frame(alignment: .topLeading)
-                Spacer()
-            }
+        VStack(alignment: .leading) {
+            Text("Quick Select")
+                .font(.custom(model.getFont(), fixedSize: 18))
             Button(action: {
                 model.startWork(method: "select")
             }) {
@@ -99,13 +96,14 @@ struct ModeSelectionView: View {
                     .resizable()
                     .frame(width: 25, height: 25)
                 Text(model.getMode(timerType: "work"))
-                    .font(.body)
+                    .font(.custom(model.getFont(), fixedSize: 16))
                     .padding()
-                    .background(model.getWorkColor())
+                    .background(model.getWorkColor(type: "button"))
                     .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .cornerRadius(8)
             }
             .buttonStyle(PlainButtonStyle())
+            .padding(.vertical, 3)
             Button(action: {
                 model.startShortBreak(method: "select")
             }) {
@@ -113,13 +111,14 @@ struct ModeSelectionView: View {
                     .resizable()
                     .frame(width: 25, height: 25)
                 Text(model.getMode(timerType: "shortBreak"))
-                    .font(.body)
+                    .font(.custom(model.getFont(), fixedSize: 16))
                     .padding()
-                    .background(model.getShortBreakColor())
+                    .background(model.getShortBreakColor(type: "button"))
                     .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .cornerRadius(8)
             }
             .buttonStyle(PlainButtonStyle())
+            .padding(.vertical, 3)
             Button(action: {
                 model.startLongBreak(method: "select")
             }) {
@@ -127,19 +126,20 @@ struct ModeSelectionView: View {
                     .resizable()
                     .frame(width: 25, height: 25)
                 Text(model.getMode(timerType: "longBreak"))
-                    .font(.body)
+                    .font(.custom(model.getFont(), fixedSize: 16))
                     .padding()
-                    .background(model.getLongBreakColor())
+                    .background(model.getLongBreakColor(type: "button"))
                     .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .cornerRadius(8)
             }
             .buttonStyle(PlainButtonStyle())
+            .padding(.vertical, 5)
         }
     }
 }
 
 struct TimeAdjustmentView: View {
-    @ObservedObject var model: TimerViewModel
+    @ObservedObject var model: PomodoroTimerModel
     
     var body: some View {
         VStack {
@@ -149,14 +149,14 @@ struct TimeAdjustmentView: View {
                 }) {
                     Image(systemName: model.getTimerIcon(modeType: "work"))
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .padding(10)
-                        .background(model.getWorkColor())
+                        .background(model.getWorkColor(type: "button"))
                         .foregroundColor(.white)
                         .cornerRadius(50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 50)
-                                .stroke(model.selectedMode == "work" ? Color.gray : Color.clear, lineWidth: 2)
+                                .stroke(model.getSelectedMode() == "work" ? Color.gray : Color.clear, lineWidth: 2)
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -165,14 +165,14 @@ struct TimeAdjustmentView: View {
                 }) {
                     Image(systemName: model.getTimerIcon(modeType: "shortBreak"))
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .padding(10)
-                        .background(model.getShortBreakColor())
+                        .background(model.getShortBreakColor(type: "button"))
                         .foregroundColor(.white)
                         .cornerRadius(50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 50)
-                                .stroke(model.selectedMode == "shortBreak" ? Color.gray : Color.clear, lineWidth: 2)
+                                .stroke(model.getSelectedMode() == "shortBreak" ? Color.gray : Color.clear, lineWidth: 2)
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -183,14 +183,14 @@ struct TimeAdjustmentView: View {
                 }) {
                     Image(systemName: model.getTimerIcon(modeType: "longBreak"))
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .padding(10)
-                        .background(model.getLongBreakColor())
+                        .background(model.getLongBreakColor(type: "button"))
                         .foregroundColor(.white)
                         .cornerRadius(50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 50)
-                                .stroke(model.selectedMode == "longBreak" ? Color.gray : Color.clear, lineWidth: 2)
+                                .stroke(model.getSelectedMode() == "longBreak" ? Color.gray : Color.clear, lineWidth: 2)
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -199,7 +199,7 @@ struct TimeAdjustmentView: View {
                 }) {
                     Image(systemName: "arrow.clockwise.circle.fill")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 35, height: 35)
                         .padding(10)
                         .background(.gray)
                         .foregroundColor(.white)
@@ -211,31 +211,32 @@ struct TimeAdjustmentView: View {
                 Button(action: {
                     model.decrementTime()
                 }) {
-                    Image(systemName: "minus.circle")
+                    Image(systemName: "minus.circle.fill")
                         .resizable()
-                        .frame(width: 45, height: 45)
+                        .frame(width: 35, height: 35)
                         .foregroundColor(.white)
                 }
                 .buttonStyle(PlainButtonStyle())
                 Text("\(model.getSelectedTime())")
-                    .font(.title2)
+                    .font(.custom(model.getFont(), fixedSize: 28))
                     .padding()
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 Button(action: {
                     model.incrementTime()
                 }) {
-                    Image(systemName: "plus.circle")
+                    Image(systemName: "plus.circle.fill")
                         .resizable()
-                        .frame(width: 45, height: 45)
+                        .frame(width: 35, height: 35)
                         .foregroundColor(.white)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
+            .padding(.top, 2)
         }
     }
 }
 
 #Preview {
-   ContentView()
+    PomodoroTimeView()
 }
