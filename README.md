@@ -1,6 +1,6 @@
 # iOS Pomodoro Timer
 - Developed using Swift on Xcode.
-- Compatible with an Apple Watch Series 9 (41/45 mm) and iPhone 13.
+- Compatible with an Apple Watch Series 9 (41/45 mm) and an iPhone 13.
 
 ## Click [here](https://youtu.be/qclilJ7rQZ0) to watch the demo video
 
